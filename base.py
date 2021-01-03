@@ -1,5 +1,6 @@
 import requests
 import json
+from logic import posts_text
 
 # Парсинг с вк группы с помощью vk_api
 def main():
@@ -8,7 +9,7 @@ def main():
     access_token = "df439f51df439f51df439f51efdf3628e1ddf43df439f5180affe39047548ba50381df8"#Сервисный ключ доступа
     version = 5.52
     offset = 0
-    count = int(input()) #кол-во "парсируемых" постов
+    count = 50 #кол-во "парсируемых" постов
     r = requests.get('https://api.vk.com/method/wall.get',params={'owner_id': group_id,
                                                                   'count': count,
                                                                   'offset': offset,
@@ -16,15 +17,10 @@ def main():
                                                                  'v': version})
 
 
-    # Выводим инф-ю в удобном формате
-    json_output = json.loads(r.text)['response']['items']
+    # Выводим инф-ю в удобном формате.Среди всех постов выделяем и выводим только те что имеют тэг '#book@proglib', или же просто выводим только книги
+    for post in posts_text(r):
+        print(post,end='\n\n\n\n')
 
-
-    # Среди всех постов выделяем и выводим только те что имеют тэг '#book@proglib', или же просто выводим только книги
-    for posts in json_output:
-        for elem in posts:
-            if elem == 'text' and '#book@proglib' in posts[elem]:
-                print(posts[elem],end='\n\n\n\n\n\n')
 
 
 
